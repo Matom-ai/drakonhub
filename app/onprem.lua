@@ -13,20 +13,6 @@ box.cfg {
 	custom_proc_title = "drakonhub_onprem"
 }
 
-my_site = "127.0.0.1" -- put the hostname of the server here or 127.0.0.1 for localhost
-
-behind_https = os.getenv("BEHIND_HTTPS")
-insecure_cookie = true
-
-if behind_https then
-	-- production setup, tarantool runs behind an HTTPS server
-	host_for_http_server = "127.0.0.1"
-	insecure_cookie = false
-else
-	-- debug setup, no HTTPS
-	host_for_http_server = my_site 
-end
-
 global_cfg = {
 	db = "tardb",
 	--db = "mysqldb",
@@ -38,7 +24,7 @@ global_cfg = {
 		size = 5
 	},
 	diatest = "/dewt/diatest",
-	host = host_for_http_server,
+	host = os.getenv("HOST"),
 	port = 8090,
 	http_options = {
 		log_requests = false
@@ -63,13 +49,13 @@ global_cfg = {
 	licensing = true,
 	https_sender_port = 3400,
 	google_anal = false,
-	my_site = "https://" .. my_site,
-	my_domain = my_site,
+	my_site = os.getenv("MY_SITE"),
+	my_domain = os.getenv("MY_DOMAIN"),
 	my_ip = my_ip,
 	complete_delay = 2,
 	on_premises = true,
 	application = "DrakonHub",
-	insecure_cookie = insecure_cookie
+	insecure_cookie = os.getenv("INSECURE_COOKIE")
 }
 
 external_creds = require("external_creds")

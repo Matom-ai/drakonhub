@@ -15,7 +15,7 @@ box.cfg {
 
 my_site = "127.0.0.1" -- put the hostname of the server here or 127.0.0.1 for localhost
 
-behind_https = false
+behind_https = os.getenv("BEHIND_HTTPS")
 insecure_cookie = true
 
 if behind_https then

@@ -55,7 +55,7 @@ global_cfg = {
 	complete_delay = 2,
 	on_premises = true,
 	application = "DrakonHub",
-	insecure_cookie = os.getenv("INSECURE_COOKIE")
+	insecure_cookie = os.getenv("INSECURE_COOKIE") == "true"
 }
 
 external_creds = require("external_creds")

@@ -89,6 +89,7 @@ global_cfg = {
     journal_dir = get_env_string("APP_JOURNAL_DIR", "/dewt/journal"),
     content_dir = get_env_string("APP_CONTENT_DIR", "/dewt/content"),
     read_dir = get_env_string("APP_READ_DIR", "/dewt/read"),
+    files = get_env_string("APP_FILES_DIR", "/dewt/files"),
     password_timeout = get_env_number("APP_PASSWORD_TIMEOUT", 5),
     use_capture = get_env_boolean("APP_USE_CAPTURE", false),
     max_recent = get_env_number("APP_MAX_RECENT", 20),

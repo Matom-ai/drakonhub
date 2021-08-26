@@ -72,7 +72,7 @@ local AUTOPAY_RETRY_DELAY_SEC = 3600
 
 local db = require(global_cfg.db)
 
-setfenv(1, {}) 
+setfenv(1, {})
 
 local module = nil
 
@@ -119,6 +119,14 @@ function api_access(req, session, headers)
     else
         return make_empty_response(headers)
     end
+end
+
+function api_health(req, session, headers)
+    local data = {
+        status = "OK"
+    }
+    
+    return make_json_success(headers, data)
 end
 
 function api_account(req, session, headers)
@@ -689,7 +697,7 @@ function api_feedback(req, session, headers)
     local filename = type .. date .. "-" .. user .. ".json"
     local path = global_cfg.feedback_dir .. "/" ..filename
     if session.user_id == "" then
-        
+
     else
         add_diagram(data)
     end
@@ -827,7 +835,7 @@ function api_get_download(req, session, headers)
             return resp
         else
             if _sw15520000_ == "svg" then
-                
+
             else
                 error(_sw15520000_)
             end
@@ -1440,7 +1448,7 @@ function api_px2_start(req, session, headers)
                   agreement_id,
                   {
                     agreement_ref = ca_details.agreement_ref
-                  }	
+                  }
                 )
                 local ip = get_client_ip(req)
                 local payment = {
@@ -1564,7 +1572,7 @@ function api_save_diatest(req, session, headers)
     if global_cfg.diatest then
         local data = req:json()
         if is_null(data.oldId) then
-            
+
         else
             local epath = make_fixture_name(data.oldId)
             os.remove(epath)
@@ -1731,7 +1739,7 @@ function api_stop_subscription(req, session, headers)
                       agreement_id,
                       {
                         state = "cancelled"
-                      }	
+                      }
                     )
                     lic.update_license(
                     	license_id,
@@ -2129,7 +2137,7 @@ end
 
 function check_license_core(user_id)
     if user_id == "admin" then
-        
+
     else
         local user = vud.get_user(user_id)
         if user then
@@ -2157,7 +2165,7 @@ function check_license_core(user_id)
                     else
                         local left = expiry - now
                         if (left > WARNING_BEFORE) or (license.warning_sent) then
-                            
+
                         else
                             lic.update_license(
                             	license_id,
@@ -2242,7 +2250,7 @@ function create_agreement(details)
         id = id:sub(1, 8)
         local old = db.agreement_get(id)
         if old then
-            
+
         else
             break
         end
@@ -2310,7 +2318,7 @@ function create_default_license(user_id, tag)
     else
         max_users = product.max_users
         product_id = global_cfg.create_license
-        
+
         period = utils.months_to_secs(
         	product.period_mon
         )
@@ -2646,7 +2654,7 @@ function download_svg(req, headers, record)
       "attachment; filename=" .. filename
     local start = original:find("<defs")
     if start == nil then
-        
+
     else
         local head = original:sub(1, start-1)
         local tail = original:sub(start)
@@ -2697,7 +2705,7 @@ function expires_later(headers)
 end
 
 function expires_now(headers)
-    headers["cache-control"] = 
+    headers["cache-control"] =
      "no-cache, private, no-store, must-revalidate, max-age=0"
     headers["expires"] = "0"
 end
@@ -2858,10 +2866,10 @@ function ga()
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    
+
       ga('create', 'UA-85987998-1', 'auto');
       ga('send', 'pageview');
-    
+
     </script>
     ]]
 end
@@ -2898,7 +2906,7 @@ end
 function get_client_ip(req)
     local ip = req:header("x-real-ip")
     if ip then
-        
+
     else
         ip = req:peer().host
     end
@@ -2939,7 +2947,7 @@ function get_license_info(user_id)
     	ref = ""
     }
     if utils.is_empty(user_id) then
-        
+
     else
         local user_row = vud.find_user(user_id)
         if user_row then
@@ -2993,7 +3001,7 @@ function get_next_product(product_id)
                 return "team"
             else
                 if product_id == "team" then
-                    
+
                 else
                     error(product_id)
                 end
@@ -3150,7 +3158,7 @@ end
 function handle_template(req, page, url_language, caching_allowed, cinfo_maker)
     local headers = {}
     if caching_allowed then
-        
+
     else
         expires_now(headers)
     end
@@ -3197,36 +3205,36 @@ function handle_template(req, page, url_language, caching_allowed, cinfo_maker)
         	carrot = global_cfg.carrot or false,
         	capterra = global_cfg.capterra or false,
         	on_premises = global_cfg.on_premises or false,
-        
+
         	currency = price_cfg.currency,
         	min_payment = price_cfg.min_payment,
-        
+
         	basic_max_diagrams = price_cfg.products.basic.max_diagrams,
         	basic_max_spaces = price_cfg.products.basic.max_spaces,
         	basic_period = price_cfg.products.basic.period_mon,
-        
-        
+
+
         	extended_price = price_cfg.products.extended.price,
         	extended_max_diagrams = price_cfg.products.extended.max_diagrams,
         	extended_max_spaces = price_cfg.products.extended.max_spaces,
         	extended_period = price_cfg.products.extended.period_mon,
         	extended_min_users = price_cfg.products.extended.min_users,
         	extended_max_users = price_cfg.products.extended.max_users,
-        
+
         	team_price = price_cfg.products.team.price,
         	team_max_diagrams = price_cfg.products.team.max_diagrams,
         	team_max_spaces = price_cfg.products.team.max_spaces,
         	team_period = price_cfg.products.team.period_mon,
         	team_min_users = price_cfg.products.team.min_users,
         	team_max_users = price_cfg.products.team.max_users,
-        
+
         	current_plan = license_info.current_plan,
         	had_trial = license_info.had_trial,
         	is_trial = license_info.is_trial,
         	ref = license_info.ref,
-        
+
         	mva = price_cfg.mva,
-        
+
         	application = global_cfg.application,
         	paysys = external_creds.paysys,
         	complete_delay = global_cfg.complete_delay
@@ -3380,7 +3388,7 @@ end
 
 function make_template(page, url_language, caching_allowed, cinfo_maker)
     if cinfo_maker then
-        
+
     else
         cinfo_maker = create_empty_cinfo
     end
@@ -3425,7 +3433,7 @@ function on_autopay_success(user_id, agreement_id, agreement, trans_number, meth
           {
             state = "active",
             due = calculate_due_time()
-          }	
+          }
         )
         create_payment(
         	user_id,
@@ -3479,7 +3487,7 @@ function on_px2_complete(user_id, agreement_id, agreement, complete_result, lang
         expiry = expiry,
         due = calculate_due_time(),
         payment1 = trans_number
-      }	
+      }
     )
     create_payment(
     	user_id,
@@ -3513,7 +3521,7 @@ function on_px2_complete(user_id, agreement_id, agreement, complete_result, lang
               old_agreement_id,
               {
                 state = "inactive"
-              }	
+              }
             )
         end
     end
@@ -3673,13 +3681,13 @@ function px2_callback(text)
                 	language
                 )
                 if paid_now then
-                    
+
                 else
                     ej.info(
                       "ignore_callback",
                       {
                         user_id = user_id,
-                        reason = 
+                        reason =
                     "Complete/Autopay called before, agreement active",
                         agreement_id = agreement_id,
                         order_ref = order_ref
@@ -3842,7 +3850,7 @@ function send_autopay_email(user_id, receipt, language, success)
     local renew = global_cfg.my_site
       .. "/buy"
     local variables = {
-    
+
     	VALUE_PRODUCT_NAME = receipt.product_name,
     	VALUE_PRICE_PER_USER = receipt.price,
     	VALUE_NUM_USERS = receipt.users,
@@ -3850,7 +3858,7 @@ function send_autopay_email(user_id, receipt, language, success)
     	VALUE_ORDER_ID = receipt.trans_id,
     	VALUE_MVA = receipt.mva,
     	RENEW_LINK = renew,
-    
+
     	MES_PRODUCT_NAME = translate(language, "MES_PRODUCT_NAME"),
     	MES_PRICE_PER_USER = translate(language, "MES_PRICE_PER_USER"),
     	MES_NUM_USERS = translate(language, "MES_NUM_USERS"),
@@ -3942,7 +3950,7 @@ function send_congrat_email(user_id, receipt, language)
     	VALUE_ORDER_ID = receipt.trans_id,
     	VALUE_DATE = receipt.date,
     	VALUE_MVA = receipt.mva,
-    
+
     	MES_PRODUCT_NAME = translate(language, "MES_PRODUCT_NAME"),
     	MES_MAX_DIAGRAMS = translate(language, "MES_MAX_DIAGRAMS"),
     	MES_MAX_SPACES = translate(language, "MES_MAX_SPACES"),
@@ -4129,7 +4137,7 @@ function set_session_cookie(headers, session_id)
     local expires = cookie_date(expires_time)
     local format = "session_id=%s; Expires=%s; Max-Age=%d; Path=/; HttpOnly;"
     if global_cfg.insecure_cookie then
-        
+
     else
         format = format .. " Secure;"
     end
@@ -4182,7 +4190,7 @@ function start()
     temp_content_route("start-drakon")
     temp_content_route("start-mind-map")
     if global_cfg.on_premises then
-        
+
     else
         temp_route("/terms", "terms.html.el", true)
         temp_content_route("drakonhub-source")
@@ -4207,7 +4215,7 @@ function start()
         )
         temp_route("/landbus", "landbus.html.el", true)
         temp_route_local("/landbus", "landbus.html.el", true)
-        
+
         temp_route("/welcome-trial", "welcome-trial.html.el", false)
         temp_route_local("/unsubscribe/:user_id/:unid", "unsub.html.el", true)
     end
@@ -4224,6 +4232,7 @@ function start()
     temp_route("/ide/spaces", "ide3.html.el", false)
     temp_route("/ide/recent", "ide3.html.el", false)
     temp_route("/ide/dashboard", "ide3.html.el", false)
+    api("health", "GET", false, false, api_health)
     api("account", "GET", true, false, api_account)
     api("own_spaces", "GET", true, false, api_get_own_spaces)
     api("license", "GET", true, false, api_get_license)
@@ -4292,7 +4301,7 @@ function start_trial(session_id, user_id, old_license_id, product_id)
     details.product_name = product.name
     details.max_diagrams = product.max_diagrams
     details.max_spaces = product.max_spaces
-    local expiry = os.time() + 
+    local expiry = os.time() +
     	utils.days_to_secs(price_cfg.trial_days)
     local trans_id = create_transaction(
     	user_id,
@@ -4357,7 +4366,7 @@ function suggest_product(session, count, get_limit)
     end
     while true do
         if product_id then
-            
+
         else
             return nil
         end
@@ -4537,7 +4546,7 @@ function try_autopay(agreement_id)
                               agreement_id,
                               {
                                 state = "retrying"
-                              }	
+                              }
                             )
                             db.commit()
                             ej.info(
@@ -4556,7 +4565,7 @@ function try_autopay(agreement_id)
                               agreement_id,
                               {
                                 state = "unpaid"
-                              }	
+                              }
                             )
                             db.commit()
                             ej.info(
@@ -4582,7 +4591,7 @@ function try_autopay(agreement_id)
                           agreement_id,
                           {
                             state = "retrying"
-                          }	
+                          }
                         )
                         db.commit()
                         ej.info(

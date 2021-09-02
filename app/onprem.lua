@@ -107,8 +107,16 @@ global_cfg = {
     complete_delay = get_env_number("APP_COMPLETE_DELAY", 2),
     on_premises = get_env_boolean("APP_ON_PREMISES", true),
     application = get_env_string("APPLICATION", "DrakonHub"),
-    insecure_cookie = get_env_boolean("APP_INSECURE_COOKIE", false)
+    insecure_cookie = get_env_boolean("APP_INSECURE_COOKIE", false),
+    mg = get_env_boolean("APP_MG", false)
 }
 
 external_creds = require("external_creds")
+
+-- Mailgun
+local mg_key = get_env_string("APP_MG_KEY", nil)
+if mg_key ~= nil then
+    external_creds.mg_key = mg_key
+end
+
 require("init")

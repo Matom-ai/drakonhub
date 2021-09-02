@@ -27,7 +27,7 @@ local external_creds = require("external_creds")
 
 local g_from = "DrakonHub Support <drakon.editor@gmail.com>"
 
-setfenv(1, {}) 
+setfenv(1, {})
 
 function build_cmd(to, subject, headers, body_file)
     -- item 85
@@ -253,13 +253,13 @@ function send_mg(user_id, to, subject, text, html, attach)
     -- item 221
     local key = external_creds.mg_key
     local sender = g_from
-    local mg = "https://api.mailgun.net/v3/mg."
+    local mg = "https://api.mailgun.net/v3/"
     -- item 228
     local subject2 = utils.bash_escape(subject)
     local text2 = utils.bash_escape(text)
     -- item 224
     local command = "curl -s --user 'api:" .. key .. "' " ..
-      mg  .. global_cfg.my_domain .. "/messages " ..
+      mg  .. global_cfg.mg_domain .. "/messages " ..
       "-F from='" .. sender .. "' " ..
       "-F to='" .. to .. "' " ..
       "-F subject='" .. subject2 .. "' " ..
@@ -269,13 +269,13 @@ function send_mg(user_id, to, subject, text, html, attach)
         -- item 232
         local html2 = utils.bash_escape(html)
         -- item 233
-        command = command ..  
+        command = command ..
          "--form-string html='<html>" .. html2 .. "</html>' "
     end
     -- item 234
     if attach then
         -- item 237
-        command = command ..  
+        command = command ..
          "-F attachment='@" .. attach .. "' "
     end
     -- item 226

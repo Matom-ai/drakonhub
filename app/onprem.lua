@@ -108,7 +108,8 @@ global_cfg = {
     on_premises = get_env_boolean("APP_ON_PREMISES", true),
     application = get_env_string("APPLICATION", "DrakonHub"),
     insecure_cookie = get_env_boolean("APP_INSECURE_COOKIE", false),
-    mg = get_env_boolean("APP_MG", false)
+    mg = get_env_boolean("APP_MG", false),
+    mg_domain = get_env_string("APP_MG_DOMAIN", nil)
 }
 
 external_creds = require("external_creds")

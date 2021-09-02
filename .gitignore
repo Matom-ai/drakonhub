@@ -7,8 +7,6 @@
 
 dhub
 
-external_creds.lua
-
 .hg
 .hgignore
 .hgtags
